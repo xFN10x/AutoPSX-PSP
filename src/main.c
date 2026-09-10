@@ -25,6 +25,7 @@ int setup_callbacks(void) {
     return thid;
 }
 
+
 int main(void)  {
     // Use above functions to make exiting possible
     setup_callbacks();

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.11)
 project(hello)
 
 
-add_executable(${PROJECT_NAME} main.c)
+add_executable(${PROJECT_NAME} src/main.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     pspdebug

@@ -1,0 +1,2 @@
+
+int REND_init();

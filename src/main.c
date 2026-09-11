@@ -1,10 +1,26 @@
 #include <pspuser.h>
 #include <pspdebug.h>
 #include <pspdisplay.h>
+#include <stdbool.h>
+
+#include "render.h"
+#include "m_opening.h"
 
 // PSP_MODULE_INFO is required
-PSP_MODULE_INFO("Hello World", 0, 1, 0);
+PSP_MODULE_INFO("AutoPSX", 0, 1, 0);
 PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_USER);
+
+typedef struct Menu
+{
+    char* name;
+    void (*render)()
+} Menu;
+
+struct Menu opening = {"opening", MRender_opening};
+
+
+bool running = true;
+Menu* menu = &opening;
 
 int exit_callback(int arg1, int arg2, void *common) {
     sceKernelExitGame();
@@ -32,9 +48,13 @@ int main(void)  {
     
     // Print Hello World! on a debug screen on a loop
     pspDebugScreenInit();
-    while(1) {
+    REND_init();
+
+    while(running) {
+        menu->render();
+        
         pspDebugScreenSetXY(0, 0);
-        pspDebugScreenPrintf("Hello World!");
+        pspDebugScreenPrintf(menu->name);
         sceDisplayWaitVblankStart();
     }
 

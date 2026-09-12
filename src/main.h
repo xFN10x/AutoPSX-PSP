@@ -4,6 +4,7 @@ typedef struct Menu
 {
     char* name;
     void (*render)();
+    void (*init)();
 } Menu;
 
 extern bool AP_Running;

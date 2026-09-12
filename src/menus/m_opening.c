@@ -4,7 +4,7 @@ TextureRenderable testTexture;
 struct Renderable testRect = {"testt",100,0,100,100};
 
 void MInit() {
-    testTexture = createTextureRenderable("test.png", "test", 0,0);
+    testTexture = createTextureRenderable("assets/test.png", "test", 0,0);
 }
 
 void MRender_opening() {

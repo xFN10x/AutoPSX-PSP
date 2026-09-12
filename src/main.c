@@ -1,62 +1,43 @@
-#include <pspuser.h>
-#include <pspdebug.h>
-#include <pspdisplay.h>
 #include <stdbool.h>
+#include <SDL3/SDL_main.h>
 
 #include "render.h"
 #include "m_opening.h"
-
-// PSP_MODULE_INFO is required
-PSP_MODULE_INFO("AutoPSX", 0, 1, 0);
-PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_USER);
-
-typedef struct Menu
-{
-    char* name;
-    void (*render)()
-} Menu;
+#include "main.h"
 
 struct Menu opening = {"opening", MRender_opening};
 
+bool AP_Running = true;
+Menu *AP_Menu = &opening;
 
-bool running = true;
-Menu* menu = &opening;
-
-int exit_callback(int arg1, int arg2, void *common) {
-    sceKernelExitGame();
-    return 0;
-}
-
-int callback_thread(SceSize args, void *argp) {
-    int cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
-    sceKernelRegisterExitCallback(cbid);
-    sceKernelSleepThreadCB();
-    return 0;
-}
-
-int setup_callbacks(void) {
-    int thid = sceKernelCreateThread("update_thread", callback_thread, 0x11, 0xFA0, 0, 0);
-    if(thid >= 0)
-        sceKernelStartThread(thid, 0, 0);
-    return thid;
-}
-
-
-int main(void)  {
+int main(int argc, char *argv[])
+{
+    (void)argc;
+    (void)argv;
     // Use above functions to make exiting possible
-    setup_callbacks();
-    
-    // Print Hello World! on a debug screen on a loop
-    pspDebugScreenInit();
-    REND_init();
+    //setup_callbacks();
 
-    while(running) {
-        menu->render();
-        
-        pspDebugScreenSetXY(0, 0);
-        pspDebugScreenPrintf(menu->name);
-        sceDisplayWaitVblankStart();
+    // pspDebugScreenInit();
+    // pspDebugInstallStdoutHandler(pspDebugScreenPrintData);
+
+    if (REND_init() != 0)
+    {
+        SDL_Log("Failed to init SDL");
+        return 1;
     }
+
+    while (AP_Running)
+    {
+
+        // pspDebugScreenSetXY(0, 0);
+        // pspDebugScreenPrintf(AP_Menu->name);
+        // pspDebugScreenSetXY(0, 1);
+        // pspDebugScreenSetXY(0, 2);
+
+        // sceDisplayWaitVblankStart();
+        render();
+    }
+    REND_quit();
 
     return 0;
 }

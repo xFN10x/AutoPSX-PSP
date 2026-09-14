@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <pspdebug.h>
 #include <SDL3/SDL_main.h>
 
 #include "render.h"
@@ -13,15 +14,21 @@ Menu *AP_Menu = NULL;
 void setMenu(Menu* men) {
     AP_Menu = men;
     AP_Menu->init();
+    SDL_Log("set menu: %s", men->name);
 }
 
 int main(int argc, char *argv[])
 {
     (void)argc;
     (void)argv;
+
+    pspDebugScreenInit();
+
     
+    SDL_SetLogOutputFunction(onSDLLog, NULL);
     if (REND_init() != 0)
     {
+        pspDebugScreenPrintf("Failed to init SDL");
         SDL_Log("Failed to init SDL");
         return 1;
     }

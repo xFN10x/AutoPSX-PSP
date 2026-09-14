@@ -26,4 +26,5 @@ struct TextureRenderable createTextureRenderable(char *texPath, char *name,
                                           int y);
 void render();
 void REND_quit();
+void onSDLLog(void *userdata, int category, SDL_LogPriority priority, const char *message);
 #endif

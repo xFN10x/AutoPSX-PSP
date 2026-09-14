@@ -1,7 +1,6 @@
 #include <SDL3/SDL.h>
 #include <libpng16/png.h>
-#include <psputility.h>
-#include <psputility_msgdialog.h>
+#include <pspdebug.h>
 
 #include "render.h"
 #include "main.h"
@@ -19,8 +18,10 @@ int debugFilesI = 0;
 
 void onSDLLog(void *userdata, int category, SDL_LogPriority priority, const char *message)
 {
-    strcpy(debugText[logI], message);
-    logI++;
+    //strcpy(debugText[logI], message);
+    pspDebugScreenPrintf(strcat(message, "\n"));
+    printf(message);
+    //logI++;
 }
 
 SDL_EnumerationResult printFiles(void *userdata, const char *dirname, const char *fname)
@@ -53,8 +54,15 @@ TextureRenderable createTextureRenderable(char *texPath, char *name,
                                           int x,
                                           int y)
 {
-    TextureRenderable nil = {};
     SDL_Surface *surf = SDL_LoadSurface(texPath);
+    Renderable nilBase = {"error", 0, 0, 100, 100};
+    TextureRenderable nil = {nilBase, 0};
+    SDL_Log("Image path: %s%s", SDL_GetBasePath(), texPath);
+    if (!SDL_GetPathInfo(texPath, NULL))
+    {
+        SDL_Log("Image doesn't exist!: %s%s", SDL_GetBasePath(), texPath);
+        return nil;
+    }
     if (surf == NULL)
     {
         SDL_Log("Failed to load: %s\n%s", texPath, SDL_GetError());
@@ -69,26 +77,35 @@ TextureRenderable createTextureRenderable(char *texPath, char *name,
         return nil;
     }
 
-    float *w;
-    float *h;
+    float w;
+    float h;
 
-    SDL_GetTextureSize(tex, w, h);
-    TextureRenderable returning = {name, x, y, *w, *h, tex};
+    if (!SDL_GetTextureSize(tex, &w, &h))
+    {
+        SDL_Log("Failed to get size of: %s\n%s", texPath, SDL_GetError());
+        return nil;
+    }
+    struct Renderable baseReturning = {name, x, y, w, h};
+    struct TextureRenderable returning = {baseReturning, tex};
+
+    SDL_Log("well, this worked: %s", texPath);
+    return returning;
 }
 
 void render()
 {
+    SDL_Log("rend");
+    SDL_SetRenderDrawColor(rend, 255, 255, 0, 255);
     SDL_RenderClear(rend);
 
     if (AP_Menu)
         AP_Menu->render();
-    SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-    for (int i = 0; i < 512; i++)
-    {
-        SDL_RenderDebugText(rend, 0, i * 8, debugText[i]);
-    }
+    //SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+    //for (int i = 0; i < 512; i++)
+    //{
+    //    SDL_RenderDebugText(rend, 0, i * 8, debugText[i]);
+    //}
 
-    SDL_SetRenderDrawColor(rend, 255, 255, 0, 255);
     SDL_RenderPresent(rend);
 }
 
@@ -101,7 +118,7 @@ void REND_quit()
 
 int REND_init()
 {
-    SDL_SetLogOutputFunction(onSDLLog, NULL);
+    SDL_Log("test");
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD))
     {
         SDL_Log("Failed to init SDL!");
@@ -114,7 +131,7 @@ int REND_init()
         return 2;
     }
 
-    //SDL_EnumerateDirectory("assets", printFiles, NULL);
+    // SDL_EnumerateDirectory("assets", printFiles, NULL);
 
     return 0;
 }

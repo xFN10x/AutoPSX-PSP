@@ -18,6 +18,7 @@ find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     SDL3::SDL3
+    pspdebug
 )
 
 if (PSP) 

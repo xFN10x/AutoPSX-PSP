@@ -9,4 +9,5 @@ typedef struct Menu
 
 extern bool AP_Running;
 extern Menu* AP_Menu;
+extern MIX_Mixer *AP_Mixer;
 #endif

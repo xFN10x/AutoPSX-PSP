@@ -1,0 +1,4 @@
+[submodule "include/yyjson"]
+	path = include/yyjson
+	url = https://github.com/ibireme/yyjson.git
+	branch = master

@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.11)
 
+set(CMAKE_C_FLAGS_DEBUG "-O2 -g")
+
 project(AutoPSX)
 
 # From apollo-psp, which is from vita shell CMakeLists - credits TheFlow
@@ -10,8 +12,8 @@ file(GLOB res_files RELATIVE
   assets/**
 )
 
-include_directories(src/ src/menus/)
-add_executable(${PROJECT_NAME} ${res} src/main.c src/render.c src/menus/m_opening.c src/game_detection.c)
+include_directories(src/ src/menus/ "include/")
+add_executable(${PROJECT_NAME} ${res} src/main.c src/render.c src/menus/m_opening.c src/game_detection.c "include/yyjson/yyjson.c")
 
 
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)

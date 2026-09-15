@@ -11,7 +11,7 @@ file(GLOB res_files RELATIVE
 )
 
 include_directories(src/ src/menus/)
-add_executable(${PROJECT_NAME} ${res} src/main.c src/render.c src/menus/m_opening.c)
+add_executable(${PROJECT_NAME} ${res} src/main.c src/render.c src/menus/m_opening.c src/game_detection.c)
 
 
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)

@@ -14,5 +14,5 @@ extern Menu* AP_Menu;
 extern MIX_Mixer *AP_Mixer;
 extern bool AP_CurrentMenuReady;
 
-void setMenu(Menu* men)
+void setMenu(Menu* men);
 #endif

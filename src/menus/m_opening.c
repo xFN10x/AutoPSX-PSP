@@ -1,5 +1,6 @@
 #include "render.h"
 #include "main.h"
+#include "game_detection.h"
 #include <SDL3_mixer/SDL_mixer.h>
 
 struct TextureRenderable testTexture;
@@ -26,15 +27,16 @@ void M_Opening_Init()
     REND_ClearColour.a = 255;
 }
 
+Uint32 startLoad(void *userdata, SDL_TimerID timerID, Uint32 interval) {
+    loadIds();
+    return 0;
+}
+
 // Called before the first frame renders
 void M_Opening_Ready()
 {
     MIX_PlayAudio(AP_Mixer, openingSfx);
     SDL_AddTimer(4000, startLoad, NULL);
-}
-
-Uint32 startLoad(void *userdata, SDL_TimerID timerID, Uint32 interval) {
-    return 0;
 }
 
 Uint8 a = 0;

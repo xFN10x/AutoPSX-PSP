@@ -3,4 +3,5 @@
 
 void M_Opening_Init();
 void M_Opening_Render();
+void M_Opening_Ready();
 #endif

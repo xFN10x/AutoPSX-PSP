@@ -16,12 +16,14 @@ SDL_Renderer *rend = NULL;
 int logI = 0;
 int debugFilesI = 0;
 
+struct SDL_Color REND_ClearColour = {0,0,0,255};
+
 void onSDLLog(void *userdata, int category, SDL_LogPriority priority, const char *message)
 {
-    //strcpy(debugText[logI], message);
+    // strcpy(debugText[logI], message);
     pspDebugScreenPrintf(strcat(message, "\n"));
     printf(message);
-    //logI++;
+    // logI++;
 }
 
 SDL_EnumerationResult printFiles(void *userdata, const char *dirname, const char *fname)
@@ -48,6 +50,12 @@ void renderTexture(TextureRenderable renderable)
 {
     SDL_FRect rect = createRectFromRenderable(renderable.base);
     SDL_RenderTexture(rend, renderable.tex, NULL, &rect);
+}
+
+void setTextureColour(TextureRenderable renderable, struct SDL_Color clr)
+{
+    SDL_SetTextureAlphaMod(renderable.tex, clr.a);
+    SDL_SetTextureColorMod(renderable.tex, clr.r, clr.g, clr.b);
 }
 
 TextureRenderable createTextureRenderable(char *texPath, char *name,
@@ -94,17 +102,25 @@ TextureRenderable createTextureRenderable(char *texPath, char *name,
 
 void render()
 {
-    SDL_Log("rend");
-    SDL_SetRenderDrawColor(rend, 255, 255, 0, 255);
+    //SDL_Log("REND");
+    SDL_SetRenderDrawColor(rend, REND_ClearColour.r, REND_ClearColour.g, REND_ClearColour.b, REND_ClearColour.a);
     SDL_RenderClear(rend);
 
-    if (AP_Menu)
+    if (!AP_Menu == NULL)
+    {
+        if (!AP_CurrentMenuReady)
+        {
+            AP_CurrentMenuReady = true;
+            AP_Menu->ready();
+            SDL_Log("READY MENU");
+        }
         AP_Menu->render();
-    //SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-    //for (int i = 0; i < 512; i++)
+    }
+    // SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+    // for (int i = 0; i < 512; i++)
     //{
-    //    SDL_RenderDebugText(rend, 0, i * 8, debugText[i]);
-    //}
+    //     SDL_RenderDebugText(rend, 0, i * 8, debugText[i]);
+    // }
 
     SDL_RenderPresent(rend);
 }

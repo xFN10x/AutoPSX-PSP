@@ -15,9 +15,11 @@ add_executable(${PROJECT_NAME} ${res} src/main.c src/render.c src/menus/m_openin
 
 
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)
+find_package(SDL3_mixer REQUIRED)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     SDL3::SDL3
+    SDL3_mixer::SDL3_mixer
     pspdebug
 )
 

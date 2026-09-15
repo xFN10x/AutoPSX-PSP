@@ -17,6 +17,8 @@ typedef struct TextureRenderable
     SDL_Texture *tex;
 } TextureRenderable;
 
+extern struct SDL_Color REND_ClearColour;
+
 int REND_init();
 SDL_FRect createRectFromRenderable(Renderable renderable);
 void renderTexture(TextureRenderable renderable);

@@ -7,14 +7,17 @@
 #include "m_opening.h"
 #include "main.h"
 
-struct Menu opening = {"opening", M_Opening_Render, M_Opening_Init};
+struct Menu opening = {"opening", M_Opening_Render, M_Opening_Init, M_Opening_Ready};
 
 bool AP_Running = true;
 Menu *AP_Menu = NULL;
+bool AP_CurrentMenuReady = false;
 MIX_Mixer *AP_Mixer;
 
 void setMenu(Menu* men) {
+    SDL_Log("setting menu: %s", men->name);
     AP_Menu = men;
+    AP_CurrentMenuReady = false;
     AP_Menu->init();
     SDL_Log("set menu: %s", men->name);
 }
